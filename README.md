@@ -18,7 +18,7 @@ The reviewer is explicitly instructed to validate suspected findings before repo
 
 The repository follows the standard `skills/*/SKILL.md` layout. Install the skill using the mechanism supported by your coding agent.
 
-With GitHub CLI, for example:
+With GitHub CLI 2.90.0 or later, for example:
 
 ```bash
 # GitHub Copilot
@@ -101,6 +101,9 @@ See [Model Selection](docs/model-selection.md).
 
 ```text
 agentic-craft/
+├── .github/
+│   └── workflows/
+│       └── validate-skills.yml
 ├── README.md
 ├── LICENSE
 ├── skills/
@@ -118,6 +121,16 @@ agentic-craft/
 ```
 
 Future skills should remain independently installable and follow the same principle: core engineering methodology in the skill, operational guidance in documentation, and harness-specific integrations only when they are actually necessary.
+
+## Validation
+
+Pull requests and updates to `main` run the official GitHub CLI Agent Skills validation:
+
+```bash
+gh skill publish --dry-run
+```
+
+This validates discovered skills against the Agent Skills specification without publishing a release.
 
 ## License
 
