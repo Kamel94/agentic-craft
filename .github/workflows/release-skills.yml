@@ -51,3 +51,37 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ inputs.tag }}
         run: gh skill publish --tag "$TAG"
+
+      - name: Verify pinned release installation
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.tag }}
+        run: |
+          for agent in github-copilot claude-code codex; do
+            target_dir="$(mktemp -d)"
+            git -C "$target_dir" init -q
+
+            (
+              cd "$target_dir"
+              gh skill install Kamel94/agentic-craft code-review \
+                --pin "$TAG" \
+                --agent "$agent" \
+                --scope project
+
+              metadata="$(gh skill list \
+                --agent "$agent" \
+                --scope project \
+                --json skillName,sourceURL,version,pinned)"
+
+              jq -e --arg tag "$TAG" '
+                any(.[];
+                  .skillName == "code-review" and
+                  .version == $tag and
+                  .pinned == true and
+                  (.sourceURL | contains("Kamel94/agentic-craft"))
+                )
+              ' <<< "$metadata" >/dev/null
+            )
+
+            rm -rf "$target_dir"
+          done
