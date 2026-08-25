@@ -26,3 +26,31 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh skill publish --dry-run
+
+      - name: Smoke-test skill installation
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          source_dir="$GITHUB_WORKSPACE"
+
+          for agent in github-copilot claude-code codex; do
+            target_dir="$(mktemp -d)"
+            git -C "$target_dir" init -q
+
+            (
+              cd "$target_dir"
+              gh skill install "$source_dir" code-review \
+                --from-local \
+                --agent "$agent" \
+                --scope project
+
+              gh skill list \
+                --agent "$agent" \
+                --scope project \
+                --json skillName \
+                --jq '.[] | select(.skillName == "code-review") | .skillName' \
+                | grep -qx 'code-review'
+            )
+
+            rm -rf "$target_dir"
+          done
