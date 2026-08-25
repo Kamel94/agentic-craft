@@ -1,0 +1,53 @@
+name: Release Agent Skills
+run-name: Release ${{ inputs.tag }}
+
+"on":
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag (SemVer, for example v0.1.0)
+        required: true
+        default: v0.1.0
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v7
+        with:
+          ref: main
+
+      - name: Show GitHub CLI version
+        run: gh --version
+
+      - name: Validate release tag
+        env:
+          TAG: ${{ inputs.tag }}
+        run: |
+          if [[ ! "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Release tag must use SemVer format, for example v0.1.0"
+            exit 1
+          fi
+
+          if git ls-remote --exit-code --tags origin "refs/tags/$TAG" >/dev/null 2>&1; then
+            echo "Tag already exists: $TAG"
+            exit 1
+          fi
+
+      - name: Validate Agent Skills
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh skill publish --dry-run
+
+      - name: Publish Agent Skills
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.tag }}
+        run: gh skill publish --tag "$TAG"
