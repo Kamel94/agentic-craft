@@ -6,7 +6,7 @@ There is no single preferred installation path. Choose the option that fits your
 
 ## GitHub CLI
 
-Recent GitHub CLI versions provide `gh skill` commands for discovering and installing Agent Skills. The feature is currently in preview.
+GitHub CLI 2.90.0 or later provides `gh skill` commands for discovering and installing Agent Skills. The feature is currently in preview.
 
 Preview the skill before installing it:
 
