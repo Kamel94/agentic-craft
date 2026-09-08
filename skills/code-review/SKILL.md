@@ -55,9 +55,9 @@ Perform a senior-level code review of the requested change. Optimize for useful 
    - Prioritize correctness, functional compliance, security, regression risk, architecture/design, maintainability, performance, tests, then style.
    - Assign severity using `references/severity.md`.
    - Make each finding concise and actionable.
-   - Each finding must establish: location, problem, realistic trigger, impact, recommendation, and confidence.
-   - The final prose does not need to expose those as six labeled fields when a natural concise comment communicates them clearly.
-   - Prefer a few high-confidence findings over a long list of weak observations.
+   - Each finding must establish: location, problem, realistic trigger, impact, and recommendation.
+   - The final prose does not need to expose those as five labeled fields when a natural concise comment communicates them clearly.
+   - Report only findings that survive the skill's confidence threshold; prefer a few high-confidence findings over a long list of weak observations.
 
 ## Required references
 
