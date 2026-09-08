@@ -51,7 +51,10 @@ Inspect:
 - affected public interfaces and contracts;
 - tests changed or added with the implementation;
 - error paths and boundary conditions introduced by the change;
-- state transitions, persistence, concurrency, and external calls when relevant.
+- state transitions, persistence, concurrency, and external calls when relevant;
+- behavior that worked before the change and can now fail because of the submitted diff.
+
+If the change touches authentication/authorization, persistence or migrations, transactions, concurrency/idempotency, caching, public contracts/serialization, or deployment/infrastructure, read `risk-areas.md` and apply only the relevant section. These checks are targeted prompts, not a generic checklist audit.
 
 Look for concrete mismatches between intended behavior and actual behavior.
 
